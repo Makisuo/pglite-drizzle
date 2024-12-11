@@ -1,15 +1,12 @@
 # PG-Lite Drizzle
 
-To install dependencies:
+This is a simple package to integrate drizzle with pglite, and electric.
+
+## Getting Started
+
+### Install
 
 ```bash
-bun install
+npx jsr add @makisuo/pglite-drizzle
+
 ```
-
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.1.38. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
