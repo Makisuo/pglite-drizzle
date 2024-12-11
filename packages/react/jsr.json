@@ -1,0 +1,7 @@
+{
+	"name": "@makisuo/pglite-drizzle-react",
+	"description": "Enables you to use drizzle-orm together with pglite and react",
+	"version": "0.0.1",
+	"license": "MIT",
+	"exports": "./index.ts"
+}

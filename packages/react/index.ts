@@ -1,0 +1,137 @@
+import { useLiveIncrementalQuery, useLiveQuery } from "@electric-sql/pglite-react"
+import {
+	type BuildRelationalQueryResult,
+	Column,
+	One,
+	SQL,
+	type TableRelationalConfig,
+	type TablesRelationalConfig,
+	is,
+} from "drizzle-orm"
+import { PgRelationalQuery } from "drizzle-orm/pg-core/query-builders/query"
+
+import type { LiveQueryResults } from "@electric-sql/pglite/live"
+import type { AnyPgSelect, AnyPgSelectQueryBuilder, PgSelectWithout } from "drizzle-orm/pg-core"
+
+type DrizzleQueryType =
+	| PgRelationalQuery<unknown>
+	| AnyPgSelect
+	| PgSelectWithout<AnyPgSelectQueryBuilder, boolean, any>
+
+type LiveQueryReturnType<T> = { data: Awaited<T> } & Omit<LiveQueryResults<unknown>, "rows">
+
+function processQueryResults<T>(query: T, rawRows: any[]): Record<string, any>[] {
+	return rawRows.map((row) => {
+		return mapRelationalRow(
+			(query as any).schema,
+			(query as any).tableConfig,
+			Object.values(row),
+			(query as any)._getQuery().selection,
+		)
+	})
+}
+
+function createQueryResult<T extends DrizzleQueryType>(
+	mappedRows: Record<string, any>[],
+	mode: "many" | "one",
+	items?: { affectedRows?: number; fields?: any[]; blob?: any },
+): LiveQueryReturnType<T> {
+	return {
+		data: (mode === "many" ? mappedRows : mappedRows[0] || undefined) as Awaited<T>,
+		affectedRows: items?.affectedRows || 0,
+		fields: items?.fields || [],
+		blob: items?.blob,
+	}
+}
+
+/**
+   * Enables you to reactively re-render your component whenever the results of a live query change.
+   *
++  * @param query Your drizzle query. This can be a noraml select query, insert query, update query or relational query.
+   */
+export const useDrizzleLive = <T extends DrizzleQueryType>(query: T): LiveQueryReturnType<T> => {
+	const sqlData = (query as any).toSQL()
+	const items = useLiveQuery(sqlData.sql, sqlData.params)
+
+	if (is(query, PgRelationalQuery)) {
+		const mode = (query as any).mode
+		const mappedRows = processQueryResults(query, items?.rows || [])
+
+		return createQueryResult<T>(mappedRows, mode, items)
+	}
+
+	return createQueryResult<T>(items?.rows || [], "many", items)
+}
+
+/*
+This hook is better for reactivity but doesnt work with include queries 
+*/
+export const useDrizzleLiveIncremental = <T extends DrizzleQueryType>(
+	diffKey: string,
+	query: T,
+): LiveQueryReturnType<T> => {
+	const sqlData = (query as any).toSQL()
+
+	const items = useLiveIncrementalQuery(sqlData.sql, sqlData.params, diffKey)
+
+	if (is(query, PgRelationalQuery)) {
+		const mode = (query as any).mode
+		const mappedRows = processQueryResults(query, items?.rows || [])
+
+		return createQueryResult<T>(mappedRows, mode, items)
+	}
+
+	return createQueryResult<T>(items?.rows || [], "many", items)
+}
+
+function mapRelationalRow(
+	tablesConfig: TablesRelationalConfig,
+	tableConfig: TableRelationalConfig,
+	row: unknown[],
+	buildQueryResultSelection: BuildRelationalQueryResult["selection"],
+	mapColumnValue: (value: unknown) => unknown = (value) => value,
+): Record<string, unknown> {
+	const result: Record<string, unknown> = {}
+
+	for (const [selectionItemIndex, selectionItem] of buildQueryResultSelection.entries()) {
+		if (selectionItem.isJson) {
+			const relation = tableConfig.relations[selectionItem.tsKey]!
+			const rawSubRows = row[selectionItemIndex] as unknown[] | null | [null] | string
+			const subRows = typeof rawSubRows === "string" ? (JSON.parse(rawSubRows) as unknown[]) : rawSubRows
+			result[selectionItem.tsKey] = is(relation, One)
+				? subRows &&
+					mapRelationalRow(
+						tablesConfig,
+						tablesConfig[selectionItem.relationTableTsKey!]!,
+						subRows,
+						selectionItem.selection,
+						mapColumnValue,
+					)
+				: (subRows as unknown[][]).map((subRow) =>
+						mapRelationalRow(
+							tablesConfig,
+							tablesConfig[selectionItem.relationTableTsKey!]!,
+							subRow,
+							selectionItem.selection,
+							mapColumnValue,
+						),
+					)
+		} else {
+			const value = mapColumnValue(row[selectionItemIndex])
+			const field = selectionItem.field!
+			let decoder: any
+			if (is(field, Column)) {
+				decoder = field
+			} else if (is(field, SQL)) {
+				// @ts-expect-error Internal field
+				decoder = field.decoder
+			} else {
+				// @ts-expect-error Internal field
+				decoder = field.sql.decoder
+			}
+			result[selectionItem.tsKey] = value === null ? null : decoder.mapFromDriverValue(value)
+		}
+	}
+
+	return result
+}
