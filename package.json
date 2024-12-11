@@ -3,6 +3,9 @@
 	"version": "0.0.1",
 	"module": "src/index.ts",
 	"type": "module",
+	"scripts": {
+		"publish": "npx jsr publish"
+	},
 	"dependencies": {
 		"@electric-sql/pglite": "^0.2.15",
 		"@electric-sql/pglite-react": "^0.2.15",
