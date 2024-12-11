@@ -22,6 +22,9 @@ function createQueryResult<T extends DrizzleQueryType>(
  * Enables you to reactively re-render your component whenever the results of a live query change.
  *
  * @param query Your drizzle query. This can be a noraml select query, insert query, update query or relational query.
+ * ```ts
+ * const { data } = useDrizzleLive(db.select().from(schema.users).where(eq(schema.users.id, 1)))
+ * ```
  */
 export const useDrizzleLive = <T extends DrizzleQueryType>(query: T): LiveQueryReturnType<T> => {
 	const sqlData = (query as any).toSQL()
@@ -43,6 +46,9 @@ export const useDrizzleLive = <T extends DrizzleQueryType>(query: T): LiveQueryR
  *
  * @param diffKey The key to use for incremental updates. This should be a unique identifier for the query. In most cases the table `id`
  * @param query Your drizzle query. This can be a noraml select query, insert query, update query or relational query.
+ * ```ts
+ * const { data } = useDrizzleLiveIncremental("id", db.select().from(schema.users).where(eq(schema.users.id, 1)))
+ * ```
  */
 export const useDrizzleLiveIncremental = <T extends DrizzleQueryType>(
 	diffKey: string,
