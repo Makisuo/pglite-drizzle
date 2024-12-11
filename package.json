@@ -1,13 +1,14 @@
 {
 	"name": "pglite-drizzle",
-	"module": "index.ts",
+	"version": "0.0.1",
+	"module": "src/index.ts",
 	"type": "module",
-	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
-		"@types/bun": "latest"
+	"dependencies": {
+		"@electric-sql/pglite": "^0.2.15",
+		"@electric-sql/pglite-react": "^0.2.15",
+		"drizzle-orm": "^0.38.0"
 	},
-	"workspaces": ["packages/*"],
-	"peerDependencies": {
-		"typescript": "^5.0.0"
+	"devDependencies": {
+		"typescript": "^5.7.2"
 	}
 }
