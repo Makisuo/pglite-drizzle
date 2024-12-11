@@ -1,4 +1,4 @@
-# pglite-drizzle
+# PG-Lite Drizzle
 
 To install dependencies:
 
