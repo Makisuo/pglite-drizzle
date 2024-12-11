@@ -1,7 +1,7 @@
 {
 	"name": "@makisuo/pglite-drizzle",
 	"description": "Enables you to use drizzle-orm together with pglite and react",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"license": "MIT",
 	"exports": {
 		".": "./src/index.ts",
