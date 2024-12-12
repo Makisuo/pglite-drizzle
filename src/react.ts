@@ -3,27 +3,27 @@ import { type DrizzleConfig, is } from "drizzle-orm"
 
 import { PgRelationalQuery } from "drizzle-orm/pg-core/query-builders/query"
 
-import { drizzle as PgLiteDrizzle, type PgliteDatabase } from "drizzle-orm/pglite"
+import { drizzle as createPgLiteClient, type PgliteDatabase } from "drizzle-orm/pglite"
 import type { DrizzleQueryType, LiveQueryReturnType } from "./index"
 import { processQueryResults } from "./relation-query-parser"
 
-const createPgLiteClient = <TSchema extends Record<string, unknown> = Record<string, never>>(
-	client: any,
-	schema?: TSchema,
-) => {
-	return PgLiteDrizzle(client, {
-		schema,
-		casing: "camelCase",
-	})
+
+
+type CreateDrizzleReturnType<TSchema extends Record<string, unknown>> = {
+	useLiveQuery: <T extends DrizzleQueryType>(fn: (db: PgliteDatabase<TSchema>) => T) => LiveQueryReturnType<T>
+	useLiveIncrementalQuery: <T extends DrizzleQueryType>(
+		diffKey: string,
+		fn: (db: PgliteDatabase<TSchema>) => T,
+	) => LiveQueryReturnType<T>
 }
 
 export function createDrizzle<TSchema extends Record<string, unknown> = Record<string, never>>(
 	config: DrizzleConfig<TSchema>,
-) {
+): CreateDrizzleReturnType<TSchema> {
 	const useLiveQuery = <T extends DrizzleQueryType>(fn: (db: PgliteDatabase<TSchema>) => T) => {
 		const pg = usePGlite()
 
-		const drizzle = createPgLiteClient(pg, config.schema)
+		const drizzle = createPgLiteClient<TSchema>(pg as any, config)
 		const query = fn(drizzle)
 
 		return useDrizzleLive<T>(query)
@@ -35,7 +35,7 @@ export function createDrizzle<TSchema extends Record<string, unknown> = Record<s
 	) => {
 		const pg = usePGlite()
 
-		const drizzle = createPgLiteClient(pg, config.schema)
+		const drizzle = createPgLiteClient<TSchema>(pg as any, config)
 		const query = fn(drizzle)
 
 		return useDrizzleLiveIncremental<T>(diffKey, query)
