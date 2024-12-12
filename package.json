@@ -8,9 +8,10 @@
 	"dependencies": {
 		"@electric-sql/pglite": "^0.2.15",
 		"@electric-sql/pglite-react": "^0.2.15",
-		"drizzle-orm": "^0.38.0"
+		"drizzle-orm": "^0.38.1"
 	},
 	"devDependencies": {
-		"typescript": "^5.7.2"
+		"typescript": "^5.7.2",
+		"@biomejs/biome": "^1.9.4"
 	}
 }

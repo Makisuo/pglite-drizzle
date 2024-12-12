@@ -1,9 +1,51 @@
-import { useLiveIncrementalQuery, useLiveQuery } from "@electric-sql/pglite-react"
-import { is } from "drizzle-orm"
+import { useLiveIncrementalQuery, useLiveQuery, usePGlite } from "@electric-sql/pglite-react"
+import { type DrizzleConfig, is } from "drizzle-orm"
+
 import { PgRelationalQuery } from "drizzle-orm/pg-core/query-builders/query"
 
+import { drizzle as PgLiteDrizzle, type PgliteDatabase } from "drizzle-orm/pglite"
 import type { DrizzleQueryType, LiveQueryReturnType } from "./index"
 import { processQueryResults } from "./relation-query-parser"
+
+const createPgLiteClient = <TSchema extends Record<string, unknown> = Record<string, never>>(
+	client: any,
+	schema?: TSchema,
+) => {
+	return PgLiteDrizzle(client, {
+		schema,
+		casing: "camelCase",
+	})
+}
+
+export function createDrizzle<TSchema extends Record<string, unknown> = Record<string, never>>(
+	config: DrizzleConfig<TSchema>,
+) {
+	const useLiveQuery = <T extends DrizzleQueryType>(fn: (db: PgliteDatabase<TSchema>) => T) => {
+		const pg = usePGlite()
+
+		const drizzle = createPgLiteClient(pg, config.schema)
+		const query = fn(drizzle)
+
+		return useDrizzleLive<T>(query)
+	}
+
+	const useLiveIncrementalQuery = <T extends DrizzleQueryType>(
+		diffKey: string,
+		fn: (db: PgliteDatabase<TSchema>) => T,
+	) => {
+		const pg = usePGlite()
+
+		const drizzle = createPgLiteClient(pg, config.schema)
+		const query = fn(drizzle)
+
+		return useDrizzleLiveIncremental<T>(diffKey, query)
+	}
+
+	return {
+		useLiveQuery,
+		useLiveIncrementalQuery
+	}
+}
 
 function createQueryResult<T extends DrizzleQueryType>(
 	mappedRows: Record<string, any>[],
