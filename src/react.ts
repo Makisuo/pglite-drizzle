@@ -17,6 +17,10 @@ type CreateDrizzleReturnType<TSchema extends Record<string, unknown>> = {
 	) => LiveQueryReturnType<T>
 }
 
+/**
+ * Helper function to create all function with hooks configured with your drizzle client config and schema types.
+ * @param config Drizzle Config object
+ */
 export function createDrizzle<TSchema extends Record<string, unknown> = Record<string, never>>(
 	config: DrizzleConfig<TSchema>,
 ): CreateDrizzleReturnType<TSchema> {
