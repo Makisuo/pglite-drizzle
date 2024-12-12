@@ -37,7 +37,14 @@ export const syncShapeToTable = <
 	} & Omit<SyncShapeToTableOptions, "table" | "primaryKey">,
 ): Promise<SyncShapeToTableResult> => {
 	return pgLite.electric.syncShapeToTable({
-		shape: options.shape,
+		shape: {
+			...options.shape,
+			params: {
+				...options.shape.params,
+				// Default to local table if not specified
+				table: options.shape.params?.table || (options.table as string),
+			},
+		},
 		table: options.table as string,
 		primaryKey: [options.primaryKey as string],
 		shapeKey: options.shapeKey,
