@@ -1,10 +1,18 @@
 import { useLiveIncrementalQuery, useLiveQuery, usePGlite } from "@electric-sql/pglite-react"
-import { type DrizzleConfig, is } from "drizzle-orm"
+import { type DrizzleConfig, type ExtractTablesWithRelations, is } from "drizzle-orm"
 
 import { PgRelationalQuery } from "drizzle-orm/pg-core/query-builders/query"
 
+import type { SyncShapeToTableOptions, SyncShapeToTableResult } from "@electric-sql/pglite-sync"
+
+import type { PGlite } from "@electric-sql/pglite"
 import { type PgliteDatabase, drizzle as createPgLiteClient } from "drizzle-orm/pglite"
-import type { DrizzleQueryType, LiveQueryReturnType } from "./index"
+import {
+	type DrizzleQueryType,
+	type LiveQueryReturnType,
+	type PGLiteWithElectric,
+	syncShapeToTable as syncShapeToTableImpl,
+} from "./index"
 import { processQueryResults } from "./relation-query-parser"
 
 type CreateDrizzleReturnType<TSchema extends Record<string, unknown>> = {
@@ -13,6 +21,17 @@ type CreateDrizzleReturnType<TSchema extends Record<string, unknown>> = {
 		diffKey: string,
 		fn: (db: PgliteDatabase<TSchema>) => T,
 	) => LiveQueryReturnType<T>
+
+	syncShapeToTable: <
+		TTableKey extends keyof ExtractTablesWithRelations<TSchema>,
+		TPrimaryKey extends keyof ExtractTablesWithRelations<TSchema>[TTableKey]["columns"],
+	>(
+		pg: PGLiteWithElectric,
+		options: {
+			table: TTableKey
+			primaryKey: TPrimaryKey
+		} & Omit<SyncShapeToTableOptions, "table" | "primaryKey">,
+	) => Promise<SyncShapeToTableResult>
 }
 
 /**
@@ -43,9 +62,23 @@ export function createDrizzle<TSchema extends Record<string, unknown> = Record<s
 		return useDrizzleLiveIncremental<T>(diffKey, query)
 	}
 
+	const syncShapeToTable = <
+		TTableKey extends keyof ExtractTablesWithRelations<TSchema>,
+		TPrimaryKey extends keyof ExtractTablesWithRelations<TSchema>[TTableKey]["columns"],
+	>(
+		pg: PGLiteWithElectric,
+		options: {
+			table: TTableKey
+			primaryKey: TPrimaryKey
+		} & Omit<SyncShapeToTableOptions, "table" | "primaryKey">,
+	) => {
+		return syncShapeToTableImpl<TSchema, TTableKey, TPrimaryKey>(pg, options)
+	}
+
 	return {
 		useDrizzleLive: useLiveQuery,
 		useDrizzleLiveIncremental: useLiveIncrementalQuery,
+		syncShapeToTable,
 	}
 }
 
