@@ -3,15 +3,13 @@ import { type DrizzleConfig, is } from "drizzle-orm"
 
 import { PgRelationalQuery } from "drizzle-orm/pg-core/query-builders/query"
 
-import { drizzle as createPgLiteClient, type PgliteDatabase } from "drizzle-orm/pglite"
+import { type PgliteDatabase, drizzle as createPgLiteClient } from "drizzle-orm/pglite"
 import type { DrizzleQueryType, LiveQueryReturnType } from "./index"
 import { processQueryResults } from "./relation-query-parser"
 
-
-
 type CreateDrizzleReturnType<TSchema extends Record<string, unknown>> = {
-	useLiveQuery: <T extends DrizzleQueryType>(fn: (db: PgliteDatabase<TSchema>) => T) => LiveQueryReturnType<T>
-	useLiveIncrementalQuery: <T extends DrizzleQueryType>(
+	useDrizzleLive: <T extends DrizzleQueryType>(fn: (db: PgliteDatabase<TSchema>) => T) => LiveQueryReturnType<T>
+	useDrizzleLiveIncremental: <T extends DrizzleQueryType>(
 		diffKey: string,
 		fn: (db: PgliteDatabase<TSchema>) => T,
 	) => LiveQueryReturnType<T>
@@ -46,8 +44,8 @@ export function createDrizzle<TSchema extends Record<string, unknown> = Record<s
 	}
 
 	return {
-		useLiveQuery,
-		useLiveIncrementalQuery
+		useDrizzleLive: useLiveQuery,
+		useDrizzleLiveIncremental: useLiveIncrementalQuery,
 	}
 }
 
