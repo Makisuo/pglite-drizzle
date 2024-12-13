@@ -5,7 +5,6 @@ import { PgRelationalQuery } from "drizzle-orm/pg-core/query-builders/query"
 
 import type { SyncShapeToTableOptions, SyncShapeToTableResult } from "@electric-sql/pglite-sync"
 
-import type { PGlite } from "@electric-sql/pglite"
 import { type PgliteDatabase, drizzle as createPgLiteClient } from "drizzle-orm/pglite"
 import {
 	type DrizzleQueryType,
