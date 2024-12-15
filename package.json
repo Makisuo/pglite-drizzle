@@ -1,8 +1,9 @@
 {
 	"name": "pglite-drizzle",
-	"version": "0.0.8",
+	"version": "0.0.9",
 	"module": "./dist/es/index.js",
 	"type": "module",
+	"repository": "https://github.com/Makisuo/pglite-drizzle",
 	"scripts": {
 		"build": "bunchee"
 	},
@@ -20,7 +21,9 @@
 		"@electric-sql/pglite": ">=0.2.15",
 		"@electric-sql/pglite-react": ">=0.2.15"
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"main": "./dist/es/index.js",
 	"types": "./dist/es/index.d.ts",
 	"exports": {
