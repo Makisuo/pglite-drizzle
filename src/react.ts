@@ -13,6 +13,9 @@ import {
 	syncShapeToTable as syncShapeToTableImpl,
 } from "./index"
 import { processQueryResults } from "./relation-query-parser"
+import { useDrizzleTanstackLive, useDrizzleTanstackLiveIncremental, useDrizzleTanstackLiveIncrementalSuspense, useDrizzleTanstackLiveSuspense, type UseDrizzleTanstackOptions } from "./react-tanstack"
+import type { UseQueryResult, UseSuspenseQueryResult } from "@tanstack/react-query"
+import React from "react"
 
 /**
  * Return type for the createDrizzle function providing type-safe Electric SQL hooks with DrizzleORM integration.
@@ -106,6 +109,48 @@ type CreateDrizzleReturnType<TSchema extends Record<string, unknown>> = {
 	 * @returns {PgliteDatabase<TSchema>} Typed DrizzleORM database instance
 	 */
 	useDrizzlePGlite: () => PgliteDatabase<TSchema>
+
+	/**
+	 * Hook for type-safe reactive queries with TanStack Query integration.
+	 * Combines DrizzleORM's type inference with Electric SQL's live query functionality
+	 * and TanStack Query's caching and suspense capabilities.
+	 *
+	 * @example
+	 * ```ts
+	 * const { data } = useDrizzleTanstackLive({
+	 *   queryKey: ['users'],
+	 *   drizzleQuery: (db) => db.select().from(schema.users),
+	 * });
+	 * ```
+	 */
+	useDrizzleTanstackLive: <TData, T extends DrizzleQueryType>(
+		fn: (db: PgliteDatabase<TSchema>) => T,
+		options: UseDrizzleTanstackOptions<TData>,
+	) => UseQueryResult<TData>
+
+	/**
+	 * Hook for type-safe reactive queries with TanStack Query integration and Suspense mode.
+	 */
+	useDrizzleTanstackLiveSuspense: <TData, T extends DrizzleQueryType>(
+		fn: (db: PgliteDatabase<TSchema>) => T,
+		options: UseDrizzleTanstackOptions<TData>,
+	) => UseSuspenseQueryResult<TData>
+
+	/**
+	 * Hook for type-safe incremental reactive queries with TanStack Query integration.
+	 */
+	useDrizzleTanstackLiveIncremental: <TData, T extends DrizzleQueryType>(
+		fn: (db: PgliteDatabase<TSchema>) => T,
+		options: UseDrizzleTanstackOptions<TData> & { diffKey: string },
+	) => UseQueryResult<TData>
+
+	/**
+	 * Hook for type-safe incremental reactive queries with TanStack Query integration and Suspense mode.
+	 */
+	useDrizzleTanstackLiveIncrementalSuspense: <TData, T extends DrizzleQueryType>(
+		fn: (db: PgliteDatabase<TSchema>) => T,
+		options: UseDrizzleTanstackOptions<TData> & { diffKey: string },
+	) => UseSuspenseQueryResult<TData>
 }
 
 /**
@@ -166,11 +211,51 @@ export function createDrizzle<TSchema extends Record<string, unknown> = Record<s
 		return syncShapeToTableImpl<TSchema, TTableKey, TPrimaryKey>(pg, options)
 	}
 
+	const useTanstackLive = <TData>(
+		fn: (db: PgliteDatabase<TSchema>) => DrizzleQueryType,
+		options: UseDrizzleTanstackOptions<TData>,
+	) => {
+		const drizzle = useDrizzlePGlite(config)
+		const query = React.useMemo(() => fn(drizzle), [drizzle, fn])
+		return useDrizzleTanstackLive({ ...options, drizzleQuery: query })
+	}
+
+	const useTanstackLiveSuspense = <TData>(
+		fn: (db: PgliteDatabase<TSchema>) => DrizzleQueryType,
+		options: UseDrizzleTanstackOptions<TData>,
+	) => {
+		const drizzle = useDrizzlePGlite(config)
+		const query = React.useMemo(() => fn(drizzle), [drizzle, fn])
+		return useDrizzleTanstackLiveSuspense({ ...options, drizzleQuery: query })
+	}
+
+	const useTanstackLiveIncremental = <TData>(
+		fn: (db: PgliteDatabase<TSchema>) => DrizzleQueryType,
+		options: UseDrizzleTanstackOptions<TData> & { diffKey: string },
+	) => {
+		const drizzle = useDrizzlePGlite(config)
+		const query = React.useMemo(() => fn(drizzle), [drizzle, fn])
+		return useDrizzleTanstackLiveIncremental({ ...options, drizzleQuery: query })
+	}
+
+	const useTanstackLiveIncrementalSuspense = <TData>(
+		fn: (db: PgliteDatabase<TSchema>) => DrizzleQueryType,
+		options: UseDrizzleTanstackOptions<TData> & { diffKey: string },
+	) => {
+		const drizzle = useDrizzlePGlite(config)
+		const query = React.useMemo(() => fn(drizzle), [drizzle, fn])
+		return useDrizzleTanstackLiveIncrementalSuspense({ ...options, drizzleQuery: query })
+	}
+
 	return {
 		useDrizzleLive: useLiveQuery,
 		useDrizzleLiveIncremental: useLiveIncrementalQuery,
 		syncShapeToTable,
 		useDrizzlePGlite: () => useDrizzlePGlite(config),
+		useDrizzleTanstackLive: useTanstackLive,
+		useDrizzleTanstackLiveSuspense: useTanstackLiveSuspense,
+		useDrizzleTanstackLiveIncremental: useTanstackLiveIncremental,
+		useDrizzleTanstackLiveIncrementalSuspense: useTanstackLiveIncrementalSuspense,
 	}
 }
 

@@ -15,6 +15,7 @@
 		"@electric-sql/pglite": "^0.2.15",
 		"@electric-sql/pglite-react": "^0.2.15",
 		"@electric-sql/pglite-sync": "^0.2.17",
+		"@types/react": "^19.0.2",
 		"bunchee": "^6.0.3",
 		"drizzle-orm": "^0.38.2",
 		"typescript": "^5.7.2",
@@ -49,5 +50,9 @@
 				"default": "./dist/cjs/index.cjs"
 			}
 		}
+	},
+	"dependencies": {
+		"@tanstack/react-query": "^5.62.11",
+		"react": "^19.0.0"
 	}
 }
