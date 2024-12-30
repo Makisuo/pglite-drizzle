@@ -5,7 +5,7 @@ import { PgRelationalQuery } from "drizzle-orm/pg-core/query-builders/query"
 
 import type { SyncShapeToTableOptions, SyncShapeToTableResult } from "@electric-sql/pglite-sync"
 
-import { type PgliteDatabase, drizzle as createPgLiteClient} from "drizzle-orm/pglite"
+import { type PgliteDatabase, drizzle as createPgLiteClient } from "drizzle-orm/pglite"
 import {
 	type DrizzleQueryType,
 	type LiveQueryReturnType,
@@ -170,7 +170,7 @@ export function createDrizzle<TSchema extends Record<string, unknown> = Record<s
 		useDrizzleLive: useLiveQuery,
 		useDrizzleLiveIncremental: useLiveIncrementalQuery,
 		syncShapeToTable,
-		useDrizzlePGlite: () => useDrizzlePGlite(config)
+		useDrizzlePGlite: () => useDrizzlePGlite(config),
 	}
 }
 
@@ -256,7 +256,7 @@ export const useDrizzleLiveIncremental = <T extends DrizzleQueryType>(
  * @returns {PgliteDatabase<TSchema>} The configured DrizzleORM database instance
  */
 export const useDrizzlePGlite = <TSchema extends Record<string, unknown>>(
-	config: DrizzleConfig<TSchema>
+	config: DrizzleConfig<TSchema>,
 ): PgliteDatabase<TSchema> => {
 	const pg = usePGlite()
 	return createPgLiteClient<TSchema>(pg as any, config)
