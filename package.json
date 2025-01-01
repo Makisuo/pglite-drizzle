@@ -9,15 +9,16 @@
 		"docs:dev": "vitepress dev docs",
 		"docs:build": "vitepress build docs",
 		"docs:preview": "vitepress preview docs",
-		"format": "biome lint --fix && biome check --write"
+		"format": "biome lint --fix && biome check --write",
+		"release": "npx changelogen@latest --release"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"@electric-sql/pglite": "^0.2.15",
 		"@electric-sql/pglite-react": "^0.2.15",
 		"@electric-sql/pglite-sync": "^0.2.17",
-		"bunchee": "^6.0.3",
-		"drizzle-orm": "^0.38.2",
+		"bunchee": "^6.2.0",
+		"drizzle-orm": "^0.38.3",
 		"typescript": "^5.7.2",
 		"vitepress": "^1.5.0"
 	},
