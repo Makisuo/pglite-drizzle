@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v0.0.11
+
+[compare changes](https://github.com/Makisuo/pglite-drizzle/compare/v0.0.9...v0.0.10)
+
+### 🩹 Fixes
+
+- Lockfile ([1c8f41d](https://github.com/Makisuo/pglite-drizzle/commit/1c8f41d))
+
+### ❤️ Contributors
+
+- Makisuo ([@Makisuo](http://github.com/Makisuo))
+- MiguelsPizza ([@MiguelsPizza](http://github.com/MiguelsPizza))
+
 ## v0.0.9
 
 
