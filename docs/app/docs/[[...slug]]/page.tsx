@@ -7,6 +7,8 @@ import { createTypeTable } from "fumadocs-typescript/ui"
 import { Step, Steps } from "fumadocs-ui/components/steps"
 import { Tab, Tabs } from "fumadocs-ui/components/tabs"
 
+import { metadataImage } from "@/lib/metadata"
+
 export default async function Page(props: {
 	params: Promise<{ slug?: string[] }>
 }) {
@@ -38,8 +40,8 @@ export async function generateMetadata(props: {
 	const page = source.getPage(params.slug)
 	if (!page) notFound()
 
-	return {
+	return metadataImage.withImage(page.slugs, {
 		title: page.data.title,
 		description: page.data.description,
-	}
+	})
 }
