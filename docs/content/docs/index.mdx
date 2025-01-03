@@ -4,8 +4,11 @@ description: Getting started with PGLite Drizzle
 icon: Album
 ---
 
-## Installation
 
+<Steps>
+<Step>
+
+### Installation
 
 <Tabs groupId='package-manager' items={['npm', 'pnpm', 'yarn', 'bun']} persist>
   ```bash tab="npm"
@@ -25,22 +28,27 @@ icon: Album
   ```
 </Tabs>
 
+</Step>
+<Step>
 
+### Initialize Client
 
-## Usage
+```ts title="drizzle-client.ts"
+import { createDrizzle } from "@makisuo/pglite-drizzle/react"
 
-
-
-### Setup
-
-```tsx drizzle-client.ts
-import { createDrizzle } from "@makisuo/pglite-drizzle"
+// Your drizzle schema
+import { schema } from "./schema.ts"
 
 export const { useDrizzleLive, useDrizzleLiveIncremental } = createDrizzle({ schema })
 ```
 
+</Step>
+ 
+<Step>
+ 
 ### Usage
-```tsx
+
+```tsx title="page.tsx"
 import { useDrizzleLive } from "./drizzle-client.ts"
 
 const { data } = useDrizzleLive((db) =>
@@ -51,4 +59,6 @@ const { data } = useDrizzleLive((db) =>
         }),
 )
 ```
+</Step>
+</Steps>
 
