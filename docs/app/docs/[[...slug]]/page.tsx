@@ -4,6 +4,7 @@ import { DocsBody, DocsDescription, DocsPage, DocsTitle } from "fumadocs-ui/page
 import { notFound } from "next/navigation"
 
 import { createTypeTable } from "fumadocs-typescript/ui"
+import { Step, Steps } from "fumadocs-ui/components/steps"
 import { Tab, Tabs } from "fumadocs-ui/components/tabs"
 
 export default async function Page(props: {
@@ -20,7 +21,7 @@ export default async function Page(props: {
 			<DocsTitle>{page.data.title}</DocsTitle>
 			<DocsDescription>{page.data.description}</DocsDescription>
 			<DocsBody>
-				<MDX components={{ ...defaultMdxComponents, Tab, Tabs }} />
+				<MDX components={{ ...defaultMdxComponents, Tab, Tabs, Step, Steps }} />
 			</DocsBody>
 		</DocsPage>
 	)

@@ -4,7 +4,10 @@ description: Using PGLite-Drizzle with React
 ---
 
 
-## Setup
+<Steps>
+<Step>
+
+### Initialize Client
 
 ```ts title="drizzle-client.ts"
 import { createDrizzle } from "@makisuo/pglite-drizzle/react"
@@ -15,7 +18,12 @@ import { schema } from "./schema.ts"
 export const { useDrizzleLive, useDrizzleLiveIncremental } = createDrizzle({ schema })
 ```
 
-## Usage
+</Step>
+ 
+<Step>
+ 
+### Usage
+
 ```tsx title="page.tsx"
 import { useDrizzleLive } from "./drizzle-client.ts"
 
@@ -27,4 +35,7 @@ const { data } = useDrizzleLive((db) =>
         }),
 )
 ```
+</Step>
+</Steps>
+
 
