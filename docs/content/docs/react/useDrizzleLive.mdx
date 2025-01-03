@@ -1,0 +1,38 @@
+---
+title: useDrizzleLive
+---
+
+## Usage
+
+useDrizzleLive can either be used directly imported from the package liked this:
+
+### Direct
+
+```tsx
+const db = useDrizzlePGlite()
+
+const { data } = useDrizzleLive(db.select().from(schema.users).where(eq(schema.users.id, 1)))
+```
+
+### With Types
+
+```tsx
+import { createDrizzle } from "@makisuo/pglite-drizzle/react"
+
+// Your drizzle schema
+import { schema } from "./schema.ts"
+
+export const { useDrizzleLive } = createDrizzle({ schema })
+
+const { data } = useDrizzleLive((db) =>
+        db.query.accounts.findMany({
+            with: {
+                institution: true,
+            },
+        }),
+)
+```
+
+
+
+

@@ -1,27 +1,31 @@
-# Getting Started
-
-This page demonstrates some of the built-in markdown extensions provided by VitePress.
+---
+title: Quick Start
+description: Getting started with PGLite Drizzle
+icon: Album
+---
 
 ## Installation
 
-::: code-group
 
-```sh [npm]
-$ npx jsr add @makisuo/pglite-drizzle
+<Tabs groupId='package-manager' items={['npm', 'pnpm', 'yarn', 'bun']} persist>
+  ```bash tab="npm"
+  npx jsr add @makisuo/pglite-drizzle
+  ```
 
-```
+  ```bash tab="pnpm"
+  pnpm dx jsr add @makisuo/pglite-drizzle
+  ```
 
-```sh [pnpm]
-$ pnpm dx jsr add @makisuo/pglite-drizzle
-```
+  ```bash tab="yarn"
+  yarn dlx jsr add @makisuo/pglite-drizzle
+  ```
 
-```sh [yarn]
-$ yarn dlx jsr add @makisuo/pglite-drizzle
-```
+  ```bash tab="bun"
+  bunx jsr add @makisuo/pglite-drizzle
+  ```
+</Tabs>
 
-```sh [bun]
-$ bunx jsr add @makisuo/pglite-drizzle
-```
+
 
 ## Usage
 
@@ -47,7 +51,4 @@ const { data } = useDrizzleLive((db) =>
         }),
 )
 ```
-
-
-
 

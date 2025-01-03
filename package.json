@@ -51,5 +51,8 @@
 				"default": "./dist/cjs/index.cjs"
 			}
 		}
+	},
+	"dependencies": {
+		"fumadocs-typescript": "^3.0.2"
 	}
 }
