@@ -2,5 +2,8 @@
 	"name": "pglite-drizzle-docs",
 	"compatibility_date": "2024-12-15",
 	"compatibility_flags": ["nodejs_compat"],
-	"pages_build_output_dir": ".vercel/output/static"
+	"pages_build_output_dir": ".vercel/output/static",
+	"vars": {
+		"NODE_VERSION": "22"
+	}
 }
