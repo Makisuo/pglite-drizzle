@@ -1,6 +1,34 @@
 # Changelog
 
 
+## v0.0.14
+
+[compare changes](https://github.com/Makisuo/pglite-drizzle/compare/v0.0.9...v0.0.14)
+
+### 🩹 Fixes
+
+- Lockfile ([1c8f41d](https://github.com/Makisuo/pglite-drizzle/commit/1c8f41d))
+
+### 📖 Documentation
+
+- Fix ([c7bd03c](https://github.com/Makisuo/pglite-drizzle/commit/c7bd03c))
+- Fix ([2e2831f](https://github.com/Makisuo/pglite-drizzle/commit/2e2831f))
+- Fix ([746550a](https://github.com/Makisuo/pglite-drizzle/commit/746550a))
+- Add logo ([2c77c59](https://github.com/Makisuo/pglite-drizzle/commit/2c77c59))
+- Add logo ([076ea03](https://github.com/Makisuo/pglite-drizzle/commit/076ea03))
+- Add og ([905a613](https://github.com/Makisuo/pglite-drizzle/commit/905a613))
+- Update favicon ([fb3962f](https://github.com/Makisuo/pglite-drizzle/commit/fb3962f))
+- Add some seo ([d938617](https://github.com/Makisuo/pglite-drizzle/commit/d938617))
+
+### 🏡 Chore
+
+- Bump bunchee ([8fc5f18](https://github.com/Makisuo/pglite-drizzle/commit/8fc5f18))
+- **release:** V0.0.12 ([76b2c71](https://github.com/Makisuo/pglite-drizzle/commit/76b2c71))
+
+### ❤️ Contributors
+
+- Makisuo ([@Makisuo](http://github.com/Makisuo))
+
 ## v0.0.12
 
 [compare changes](https://github.com/Makisuo/pglite-drizzle/compare/v0.0.9...v0.0.12)
