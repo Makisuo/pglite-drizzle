@@ -3,7 +3,6 @@ import defaultMdxComponents from "fumadocs-ui/mdx"
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from "fumadocs-ui/page"
 import { notFound } from "next/navigation"
 
-import { createTypeTable } from "fumadocs-typescript/ui"
 import { Step, Steps } from "fumadocs-ui/components/steps"
 import { Tab, Tabs } from "fumadocs-ui/components/tabs"
 
