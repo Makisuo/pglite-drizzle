@@ -1,6 +1,6 @@
 {
 	"name": "pglite-drizzle",
-	"version": "0.0.14",
+	"version": "0.0.15",
 	"module": "./dist/es/index.js",
 	"type": "module",
 	"repository": "https://github.com/Makisuo/pglite-drizzle",
